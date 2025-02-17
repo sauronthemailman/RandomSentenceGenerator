@@ -1,8 +1,21 @@
 .navbar-brand {
-    color: rgb(43, 141, 226);
+    color: cadetblue;
 }
 
 .nav-item{
-    color: aliceblue;
+    color: #eeebd0;
 }
 
+#lowest-index-bg{
+    background-color: #e86252;
+    
+}
+
+#output-container{
+    background-color: #ebb3a9;
+}
+/*
+#navbar{
+    decide later
+}
+*/
