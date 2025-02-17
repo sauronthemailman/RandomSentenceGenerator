@@ -1,0 +1,18 @@
+{
+  "Subject": {
+    "Nouns": ["dog", "teacher", "car", "child", "computer"],
+    "Pronouns": ["he", "she", "it", "they", "we"]
+  },
+  "Predicate": {
+    "Verbs": ["eats", "teaches", "drives", "plays", "types"],
+    "Helping Verbs": ["is", "are", "was", "were", "has"]
+  },
+  "Object": {
+    "Direct Objects": ["apple", "lesson", "road", "game", "email"],
+    "Indirect Objects": ["him", "her", "us", "them", "you"]
+  },
+  "Complement": {
+    "Subject Complements": ["happy", "tired", "excited", "confident", "angry"],
+    "Object Complements": ["delicious", "boring", "dangerous", "fun", "important"]
+  }
+}
