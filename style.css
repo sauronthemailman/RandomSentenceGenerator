@@ -11,11 +11,33 @@
     
 }
 
-#output-container{
-    background-color: #508aa8;
-}
 /*
 #navbar{
     decide later
 }
 */
+
+#output-container {
+    width: 80vw; /* Adjust width inside the container */
+    height: 70vh; /* Makes it take up 70% of the viewport height */
+    display: flex;
+    justify-content: center; /* Centers content horizontally */
+    align-items: center; /* Centers content vertically */
+}
+
+.output-box {
+    background-color: #333; /* Dark background for contrast */
+    color: #508aa8; /* Light blue text */
+    width: 100%; /* Fill the entire container width */
+    height: 100%; /* Fill the entire container height */
+    padding: 20px; /* Internal spacing */
+    padding-left: 30px; /* Extra left padding */
+    border-radius: 8px; /* Rounded corners */
+    overflow-y: auto; /* Enables vertical scrolling if content overflows */
+    font-size: 16px; /* Adjust text size */
+    text-align: left; /* Align text to the left */
+    display: flex;
+    flex-direction: column;
+    border: 4px solid lightblue; /* Ensures the border fully covers the box */
+    box-sizing: border-box; /* Ensures padding doesn't shrink the border */
+}
