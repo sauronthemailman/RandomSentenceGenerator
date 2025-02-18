@@ -1,5 +1,5 @@
 .navbar-brand {
-    color: cadetblue;
+    color: #ba1200;
 }
 
 .nav-item{
@@ -7,12 +7,12 @@
 }
 
 #lowest-index-bg{
-    background-color: #e86252;
+    background-color: #031927;
     
 }
 
 #output-container{
-    background-color: #ebb3a9;
+    background-color: #508aa8;
 }
 /*
 #navbar{
