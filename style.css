@@ -26,21 +26,33 @@
     padding: 10vw;
     margin-left: 10vw;
     margin-right: 10vw;
+    margin-top: 2vh;
 }
 
 .output-box {
     background-color: #124262; /* Dark background for contrast */
-    color: #508aa8; /* Light blue text */
-    width: 100%; /* Fill the entire container width */
-    height: 100%; /* Fill the entire container height */
+    color: white; /* Light blue text */
+    width: 90%; /* Fill the entire container width */
+    height: 90%; /* Fill the entire container height */
     padding: 20px; /* Internal spacing */
-    padding-left: 30px; /* Extra left padding */
-    border-radius: 8px; /* Rounded corners */
+    border-radius: 20px; /* Rounded corners */
     overflow-y: auto; /* Enables vertical scrolling if content overflows */
-    font-size: 16px; /* Adjust text size */
+    font-size: 20px; /* Adjust text size */
     text-align: left; /* Align text to the left */
     display: flex;
     flex-direction: column;
     border: 2px solid black; /* Ensures the border fully covers the box */
     box-sizing: border-box; /* Ensures padding doesn't shrink the border */
+}
+
+#Save-button{
+
+}
+
+#Reset-button{
+
+}
+
+#Edit-button{
+
 }
