@@ -19,10 +19,11 @@
 
 #output-container {
     width: 80vw; /* Adjust width inside the container */
-    height: 70vh; /* Makes it take up 70% of the viewport height */
     display: flex;
     justify-content: center; /* Centers content horizontally */
     align-items: center; /* Centers content vertically */
+    padding: 10vw;
+    margin: 10vw;
 }
 
 .output-box {
