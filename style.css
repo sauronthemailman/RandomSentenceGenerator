@@ -2,8 +2,8 @@
     color: #ba1200;
 }
 
-.nav-item{
-    color: #eeebd0;
+.nav-link{
+    color: white;
 }
 
 #lowest-index-bg{
@@ -24,8 +24,7 @@
     justify-content: center; /* Centers content horizontally */
     align-items: center; /* Centers content vertically */
     padding: 10vw;
-    margin-left: 10vw;
-    margin-right: 10vw;
+    margin: auto;
     margin-top: 2vh;
 }
 
