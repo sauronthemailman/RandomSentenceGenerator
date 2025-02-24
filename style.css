@@ -63,6 +63,7 @@ width: 40%;
   right: 0; /* Positions it on the right */
   width: auto;
   background-color: transparent; /* Removes unwanted purple box */
+  
 }
 
 
@@ -84,7 +85,7 @@ top: 0;
 left: -30%;
 width: 30%;
 height: 100vh;
-background-color: #8c52ff;
+background-color: #1c1c1c;
 box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
 z-index: 1049;
 transition: left 0.3s ease-in-out;
@@ -93,6 +94,11 @@ transition: left 0.3s ease-in-out;
 /* When the collapse is shown, bring it into view */
 #filterContent.show {
   left: 0;
+}
+#submit-filter{
+  position: fixed;
+  bottom: 10px;
+  
 }
 
 #Save-button {

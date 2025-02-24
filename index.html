@@ -15,8 +15,9 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body id="lowest-index-bg">
+  <div id="navbar">
     <nav
-      id="navbar"
+      
       class="navbar navbar-expand-sm border-bottom border-body border-#D4AF37 d-flex fw-bold"
     >
       <div id="navbar-brand" class="container-fluid">
@@ -45,7 +46,7 @@
         </div>
       </div>
     </nav>
-
+  </div>
     <div id="generate-filter">
       <!-- Filter Toggle Button -->
       <button
@@ -58,13 +59,18 @@
         aria-expanded="false"
         aria-label="Toggle filter"
       >
-        <img src="icons/filter_alt_24dp.svg" alt="Filter Icon" width="24" height="24" />
+        <img
+          src="icons/tune_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png"
+          alt="Filter Icon"
+          width="24"
+          height="24"
+        />
       </button>
 
       <!-- Collapsible Filter Section -->
       <div id="filterContent" class="collapse position-fixed bg-light p-3">
         <p>Filter options go here...</p>
-        <div class="input-group mb-3">
+        <!--<div class="input-group mb-3">
           <input
             type="text"
             class="form-control"
@@ -73,13 +79,40 @@
             aria-describedby="basic-addon2"
           />
           <div class="input-group-append">
-            <button class="btn btn-outline-secondary bg-success" type="button">Send</button>
+            <button class="btn btn-outline-secondary bg-success" type="button">
+              Send
+            </button>
+          </div>
+          <div id="submit-filter">
+            <button type="button" class="btn btn-success btn-lg">submit</button>
+          </div>-->
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <button 
+                type="button" 
+                class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" 
+                data-bs-toggle="dropdown" 
+                aria-haspopup="true" 
+                aria-expanded="false">
+                <span class="sr-only">Toggle Dropdown</span>
+              </button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="#">upload</a>
+                  <a class="dropdown-item" href="#">delete</a>
+                  <a class="dropdown-item" href="#">ignore</a>
+                
+                </div>
+            </div>
+            <input type="text" class="form-control" aria-label="Text input with segmented dropdown button">
           </div>
         </div>
       </div>
     </div>
 
-    <div id="output-container" class="output-box align-items-center text-center">
+    <div
+      id="output-container"
+      class="output-box align-items-center text-center"
+    >
       <p class="card-text">Generated text goes here</p>
     </div>
 
