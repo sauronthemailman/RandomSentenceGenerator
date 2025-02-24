@@ -6,7 +6,7 @@
   color: #d4af37;
 }
 
-#lowest-index-bg {
+.lowest-index-bg {
   background-color: #1c1c1c;
   z-index: -1;
 }
@@ -99,6 +99,11 @@ transition: left 0.3s ease-in-out;
   
 }
 
+#dictionary-search{
+  
+  padding-top: 20vh;
+  margin-top: 30vh;
+}
 #Save-button {
 }
 
@@ -106,4 +111,8 @@ transition: left 0.3s ease-in-out;
 }
 
 #Edit-button {
+}
+#dictionary-search input {
+  position: relative;
+  z-index: 10;
 }
