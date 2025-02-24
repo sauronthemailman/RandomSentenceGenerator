@@ -73,9 +73,7 @@ position: fixed;
 top: 70px;
 right: 10px;
 z-index: 1050;
-background-color: white;
-border: 1px solid black;
-padding: 8px;
+
 }
 
 /* Ensure filter expands only from the right */
