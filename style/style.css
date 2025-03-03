@@ -118,7 +118,7 @@
 }
 .grid-item {
   background-color: #333333;
-  height: 150px;
+  height: 45vh;
   display: flex;
   justify-content: center;
   align-items: center;
