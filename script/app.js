@@ -27,3 +27,4 @@ function toggleExpand(element) {
     grid.classList.remove("dimmed"); // Remove dimming when collapsed
   }
 }
+
