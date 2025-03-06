@@ -28,3 +28,5 @@ function toggleExpand(element) {
   }
 }
 
+//Dictionary functions//
+

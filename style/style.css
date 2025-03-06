@@ -95,6 +95,17 @@
 #dictionary-search {
   padding-top: 20vh;
   margin-top: 30vh;
+  margin-top: 50px;
+  
+
+
+}
+.form-control {
+    position: relative;
+    z-index: 10;
+}
+#results {
+margin-top: 20px;
 }
 #Save-button {
 }

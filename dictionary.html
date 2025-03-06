@@ -11,88 +11,63 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="style/style.css" />
-    <style>
-      body {
-        background-color: #f8f9fa;
-      }
-      #dictionary-search {
-        margin-top: 50px;
-      }
-      #results {
-        margin-top: 20px;
-      }
-    </style>
+
   </head>
   <body class="lowest-index-bg">
-    <div
-      id="dictionary-search"
-      class="input-group mb-3 w-75 mt-4 mx-auto lowest-index-bg"
-    >
+    <div id="dictionary-search" class="input-group mb-3 w-75 mt-4 mx-auto">
       <input
         type="text"
         class="form-control"
         placeholder="Search..."
-        aria-label="input word"
+        aria-label="Search"
         aria-describedby="basic-addon2"
       />
-
-        <button
-          class="btn btn-outline-secondary text-white btn-success ms-1"
-          type="button"
-        >
-          Add
-        </button>
-        <button
-          class="btn btn-outline-secondary text-white btn-danger ms-1"
-          type="button"
-        >
-          Delete
-        </button>
-      </div>
-      <div class="container mt-4">
-        <h5>Select Categories:</h5>
-        <div class="row">
-          <!-- Subject -->
-          <div class="col-md-4 text-white">
-            <h6>Subject</h6>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="Nouns" id="nouns">
-              <label class="form-check-label" for="nouns">Nouns</label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="Pronouns" id="pronouns">
-              <label class="form-check-label" for="pronouns">Pronouns</label>
-            </div>
+      <button class="btn btn-success text-white ms-1" type="button">Add</button>
+      <button class="btn btn-danger text-white ms-1" type="button">Delete</button>
+    </div>
+    
+    <div class="container mt-4">
+      <h5>Select Categories:</h5>
+      <div class="row">
+        <!-- Subject -->
+        <div class="col-md-4 text-white">
+          <h6>Subject</h6>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="Nouns" id="nouns" />
+            <label class="form-check-label" for="nouns">Nouns</label>
           </div>
-
-          <!-- Predicate -->
-          <div class="col-md-4 text-white">
-            <h6>Predicate</h6>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="Verbs" id="verbs">
-              <label class="form-check-label" for="verbs">Verbs</label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="Helping Verbs" id="helping-verbs">
-              <label class="form-check-label" for="helping-verbs">Helping Verbs</label>
-            </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="Pronouns" id="pronouns" />
+            <label class="form-check-label" for="pronouns">Pronouns</label>
           </div>
+        </div>
 
-          <!-- Object -->
-          <div class="col-md-4 text-white">
-            <h6>Object</h6>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="Direct Objects" id="direct-objects">
-              <label class="form-check-label" for="direct-objects">Direct Objects</label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="Indirect Objects" id="indirect-objects">
-              <label class="form-check-label" for="indirect-objects">Indirect Objects</label>
-            </div>
+        <!-- Predicate -->
+        <div class="col-md-4 text-white">
+          <h6>Predicate</h6>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="Verbs" id="verbs" />
+            <label class="form-check-label" for="verbs">Verbs</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="Helping Verbs" id="helping-verbs" />
+            <label class="form-check-label" for="helping-verbs">Helping Verbs</label>
+          </div>
+        </div>
+
+        <!-- Object -->
+        <div class="col-md-4 text-white">
+          <h6>Object</h6>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="Direct Objects" id="direct-objects" />
+            <label class="form-check-label" for="direct-objects">Direct Objects</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="Indirect Objects" id="indirect-objects" />
+            <label class="form-check-label" for="indirect-objects">Indirect Objects</label>
           </div>
         </div>
       </div>
-
     </div>
   </body>
 </html>
