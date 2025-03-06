@@ -30,3 +30,8 @@ function toggleExpand(element) {
 
 //Dictionary functions//
 
+async function showWord() {
+
+  fetch
+  
+}
