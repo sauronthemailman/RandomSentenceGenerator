@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Random Sentence Generator</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -11,7 +11,6 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="style/style.css" />
-    <link rel="script" href="script/app.js"/>
   </head>
   <body class="lowest-index-bg">
     <div id="navbar">
@@ -59,39 +58,41 @@
         >
           filter
         </button>
-        <div id="filterContent" class="collapse position-fixed  p-3>
-          <p>Filter options go here...</p>
+        <div id="filterContent" class="collapse position-fixed p-3">
+          <h5 class="text-white">Sentence Length Filters</h5>
           <div class="d-flex flex-column gap-2">
-            <div class="input-group mb-3">
+            <div class="form-check">
               <input
-                type="text"
-                class="form-control"
-                placeholder="Input Word"
-                aria-label="Input Word"
-                aria-describedby="basic-addon2"
+                class="form-check-input"
+                type="checkbox"
+                id="small-sentence"
+                value="small"
               />
-              <button class="btn btn-success" type="button">Send</button>
+              <label class="form-check-label text-white" for="small-sentence">
+                Small (200 characters)
+              </label>
             </div>
             <div class="form-check">
               <input
                 class="form-check-input"
-                type="radio"
-                name="word-action"
-                id="add-word"
-                value="add-word"
-                checked
+                type="checkbox"
+                id="medium-sentence"
+                value="medium"
               />
-              <label class="form-check-label text-white" for="add-word"> Add </label>
+              <label class="form-check-label text-white" for="medium-sentence">
+                Medium (400 characters)
+              </label>
             </div>
             <div class="form-check">
               <input
                 class="form-check-input"
-                type="radio"
-                name="word-action"
-                id="delete-word"
-                value="delete-word"
+                type="checkbox"
+                id="large-sentence"
+                value="large"
               />
-              <label class="form-check-label text-white" for="delete-word"> Delete </label>
+              <label class="form-check-label text-white" for="large-sentence">
+                Large (500 characters)
+              </label>
             </div>
           </div>
         </div>
@@ -103,15 +104,18 @@
         <p class="card-text">Generated text goes here</p>
       </div>
       <div class="d-flex justify-content-center gap-2 mt-1">
-        <button type="button" class="btn btn-success btn-lg">Save</button>
-        <button type="button" class="btn btn-warning btn-lg">Reset</button>
-        <button type="button" class="btn btn-danger btn-lg">Edit</button>
+        <button type="button" id="generate-btn" class="btn btn-primary btn-lg">Generate</button>
+        <button type="button" id="save-btn" class="btn btn-success btn-lg">Save</button>
+        <button type="button" id="reset-btn" class="btn btn-warning btn-lg">Reset</button>
       </div>
+
       <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"
       ></script>
+      <script type="module" src="script/app.js"></script>
+      <script src="script/sentence-generator.js"></script>
     </div>
   </body>
   <footer class="text-center mt-5 py-3 bg-dark text-white">
