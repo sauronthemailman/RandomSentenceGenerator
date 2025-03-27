@@ -21,6 +21,17 @@ function generateSentenceCombination(wordsData, targetLength) {
   let iterations = 0;
 
   while (currentSentence.length < targetLength && iterations < maxIterations) {
+    // Additional word lists for missing placeholders
+    const possessivePronounList = ["his", "her", "their", "its"];
+    const personalPronounList = ["he", "she", "they", "it"];
+    const adverbList = [
+      "quickly",
+      "carefully",
+      "enthusiastically",
+      "silently",
+      "boldly",
+    ];
+
     // Select random words with repeated selection allowed
     const subject = getRandomItem(wordsData.Subject.Nouns);
     const verb = getRandomItem(wordsData.Predicate.Verbs);
@@ -35,14 +46,96 @@ function generateSentenceCombination(wordsData, targetLength) {
     const article = getRandomItem(wordsData.Modifiers.Articles);
     const adjective = getRandomItem(wordsData.Modifiers.Adjectives);
 
+    // Add new random selections for missing placeholders
+    const possessivePronoun = getRandomItem(possessivePronounList);
+    const personalPronoun = getRandomItem(personalPronounList);
+    const adverb = getRandomItem(adverbList);
+
     // Expanded sentence templates with more variety
     const sentenceTemplates = [
-      `${subject} ${helpingVerb} ${subjectComplement}. `,
-      `${subject} ${verb} ${article} ${adjective} ${directObject}. `,
-      `${subject} ${verb} ${directObject} that ${helpingVerb} ${objectComplement}. `,
-      `The ${adjective} ${subject} ${verb} ${article} ${directObject}. `,
-      `Despite challenges, ${subject} ${helpingVerb} determined to ${verb} ${directObject}. `,
-      `With great enthusiasm, ${subject} ${verb} ${article} ${adjective} ${directObject} remarkably well. `,
+      `${subject} ${helpingVerb} feeling ${adjective} about ${possessivePronoun} progress.`,
+      `${subject} ${verb} ${article} ${adjective} ${directObject} and felt accomplished.`,
+      `${subject} ${helpingVerb} always striving to ${verb} better each day.`,
+      `${subject} ${verb} ${directObject} with great enthusiasm and determination.`,
+      `The ${adjective} ${subject} ${verb} through the challenges with ease.`,
+      `Despite the obstacles, ${subject} ${helpingVerb} determined to ${verb} ${directObject}.`,
+      `With a deep breath, ${subject} ${verb} ${directObject} and moved forward.`,
+      `${subject} ${verb} ${directObject} without hesitation, knowing it was the right choice.`,
+      `No matter the situation, ${subject} ${helpingVerb} ready to ${verb} ${directObject}.`,
+      `${subject} ${verb} ${directObject} while thinking about the future.`,
+      `In the face of adversity, ${subject} ${helpingVerb} remained strong.`,
+      `${subject} ${verb} ${directObject} with a smile, enjoying the moment.`,
+      `The ${adjective} ${subject} ${verb} ${article} ${directObject} with care and precision.`,
+      `${subject} ${verb} ${directObject} effortlessly, impressing everyone around.`,
+      `${subject} ${helpingVerb} always looking for ways to ${verb} ${directObject} better.`,
+      `Even when tired, ${subject} ${helpingVerb} pushed forward and ${verb} ${directObject}.`,
+      `After much thought, ${subject} ${verb} ${directObject} with confidence.`,
+      `By working together, ${subject} ${helpingVerb} able to ${verb} ${directObject}.`,
+      `Though uncertain, ${subject} ${helpingVerb} took the leap and ${verb} ${directObject}.`,
+      `${subject} ${verb} ${directObject} with a sense of accomplishment.`,
+      `To make a difference, ${subject} ${helpingVerb} committed to ${verb} ${directObject}.`,
+      `${subject} ${helpingVerb} inspired to ${verb} ${directObject} after hearing the story.`,
+      `The journey was tough, but ${subject} ${helpingVerb} kept moving forward.`,
+      `In a quiet moment, ${subject} ${helpingVerb} reflected on ${possessivePronoun} choices.`,
+      `${subject} ${verb} ${directObject} because it felt like the right thing to do.`,
+      `With a sense of purpose, ${subject} ${verb} ${directObject} wholeheartedly.`,
+      `At the last minute, ${subject} ${helpingVerb} decided to ${verb} ${directObject}.`,
+      `${subject} ${verb} ${directObject} as if ${possessivePronoun} life depended on it.`,
+      `Although nervous, ${subject} ${helpingVerb} stepped up to ${verb} ${directObject}.`,
+      `While the world watched, ${subject} ${verb} ${directObject} with grace.`,
+      `The sun was setting when ${subject} finally ${verb} ${directObject}.`,
+      `Despite doubts, ${subject} ${helpingVerb} believed in the power of ${possessivePronoun} actions.`,
+      `The moment felt surreal as ${subject} ${verb} ${directObject}.`,
+      `${subject} ${verb} ${directObject} with a newfound sense of purpose.`,
+      `Even in chaos, ${subject} ${helpingVerb} found a way to ${verb} ${directObject}.`,
+      `${subject} ${verb} ${directObject} and felt a weight lift off ${possessivePronoun} shoulders.`,
+      `As the crowd cheered, ${subject} ${verb} ${directObject} with excitement.`,
+      `No matter the odds, ${subject} ${helpingVerb} determined to ${verb} ${directObject}.`,
+      `In a surprising twist, ${subject} ${verb} ${directObject} unexpectedly.`,
+      `${subject} ${verb} ${directObject} because it was the right thing to do.`,
+      `Against all expectations, ${subject} ${helpingVerb} found the courage to ${verb} ${directObject}.`,
+      `The world seemed to pause as ${subject} ${verb} ${directObject}.`,
+      `It took time, but ${subject} ${helpingVerb} finally ready to ${verb} ${directObject}.`,
+      `After a long journey, ${subject} ${helpingVerb} proud of ${possessivePronoun} progress.`,
+      `As the stars shone above, ${subject} ${verb} ${directObject} and smiled.`,
+      `${subject} ${verb} ${directObject} with an energy that was contagious.`,
+      `Knowing it was time, ${subject} ${helpingVerb} made the bold choice to ${verb} ${directObject}.`,
+      `The challenge was tough, but ${subject} ${helpingVerb} determined to overcome it.`,
+      `${subject} ${verb} ${directObject} and felt a surge of confidence.`,
+      `The journey was unpredictable, but ${subject} ${helpingVerb} adapted and grew.`,
+      `${subject} ${helpingVerb} excited to see where ${possessivePronoun} path would lead.`,
+      `Despite initial fears, ${subject} ${helpingVerb} embraced the opportunity to ${verb} ${directObject}.`,
+      `The air was filled with anticipation as ${subject} ${verb} ${directObject}.`,
+      `As the morning light broke, ${subject} ${helpingVerb} prepared to ${verb} ${directObject}.`,
+      `${subject} ${verb} ${directObject} with a deep sense of gratitude.`,
+      `Each step forward made ${subject} ${helpingVerb} more certain of ${possessivePronoun} decision.`,
+      `With a heart full of hope, ${subject} ${verb} ${directObject}.`,
+      `Although the road was uncertain, ${subject} ${helpingVerb} determined to continue.`,
+      `At that moment, ${subject} ${helpingVerb} felt truly alive.`,
+      `While reflecting on the past, ${subject} ${verb} ${directObject} with newfound wisdom.`,
+      `${subject} ${verb} ${directObject} and discovered something unexpected.`,
+      `Taking a deep breath, ${subject} ${helpingVerb} moved forward with determination.`,
+      `Through all the ups and downs, ${subject} ${helpingVerb} never lost sight of ${possessivePronoun} goal.`,
+      `${subject} ${verb} ${directObject} in a way that left an impact.`,
+      `Though exhausted, ${subject} ${helpingVerb} found the strength to ${verb} ${directObject}.`,
+      `The path was uncertain, but ${subject} ${helpingVerb} willing to take the risk.`,
+      `No one expected it, but ${subject} ${helpingVerb} managed to ${verb} ${directObject}.`,
+      `${subject} ${verb} ${directObject} and learned a valuable lesson along the way.`,
+      `The experience taught ${subject} that every step matters.`,
+      `The journey was long, but ${subject} ${helpingVerb} grateful for every moment.`,
+      `Every decision led ${subject} closer to ${possessivePronoun} dream.`,
+      `Even in the darkest moments, ${subject} ${helpingVerb} held onto hope.`,
+      `With newfound clarity, ${subject} ${verb} ${directObject} and embraced the future.`,
+      `${subject} ${verb} ${directObject} in a way that changed everything.`,
+      `Despite uncertainty, ${subject} ${helpingVerb} took the chance to ${verb} ${directObject}.`,
+      `A single choice made all the difference as ${subject} ${verb} ${directObject}.`,
+      `${subject} ${helpingVerb} embraced the challenge and grew from it.`,
+      `The best moments come when ${subject} ${verb} ${directObject} fearlessly.`,
+      `With a heart full of passion, ${subject} ${verb} ${directObject} and inspired others.`,
+      `No matter the odds, ${subject} ${helpingVerb} always willing to try.`,
+      `Looking back, ${subject} ${helpingVerb} proud of every step taken.`,
+      `The story of ${subject} is one of courage, perseverance, and triumph.`,
+      `As the sun set, ${subject} ${verb} ${directObject} and felt at peace.`,
     ];
 
     // Add a new sentence if adding it won't exceed the target length
