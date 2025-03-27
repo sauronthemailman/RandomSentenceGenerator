@@ -32,6 +32,7 @@
 
 #output-container.shrink {
   width: 40%;
+  width: 40%;
 }
 .output-box {
   background-color: #333333; /* Dark background for contrast */
@@ -68,10 +69,23 @@
   top: 70px;
   right: 10px;
   z-index: 1050;
+  position: fixed;
+  top: 70px;
+  right: 10px;
+  z-index: 1050;
 }
 
 /* Ensure filter expands only from the right */
 #filterContent {
+  position: fixed;
+  top: 0;
+  left: -30%;
+  width: 30%;
+  height: 100vh;
+  background-color: #1c1c1c;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+  z-index: 1049;
+  transition: left 0.3s ease-in-out;
   position: fixed;
   top: 0;
   left: -30%;
