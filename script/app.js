@@ -9,26 +9,6 @@ filterContent.addEventListener("hide.bs.collapse", () => {
   outputContainer.classList.remove("shrink");
 });
 
-//---------------------------------------------------------//
-
-function toggleExpand(element) {
-  let grid = document.getElementById("grid");
-  let isExpanded = element.classList.contains("expanded");
-
-  // Remove expanded class from all items
-  document.querySelectorAll(".grid-item").forEach((item) => {
-    item.classList.remove("expanded");
-  });
-
-  if (!isExpanded) {
-    element.classList.add("expanded");
-    grid.classList.add("dimmed"); // Apply dimming
-  } else {
-    grid.classList.remove("dimmed"); // Remove dimming when collapsed
-  }
-}
-
-//----------------------------------------------------------SentenceGenerator
 // Function to get a random item from an array
 function getRandomItem(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -62,7 +42,7 @@ function generateSentenceCombination(wordsData, targetLength) {
       `${subject} ${verb} ${directObject} that ${helpingVerb} ${objectComplement}. `,
       `The ${adjective} ${subject} ${verb} ${article} ${directObject}. `,
       `Despite challenges, ${subject} ${helpingVerb} determined to ${verb} ${directObject}. `,
-      `With great enthusiasm, ${subject} ${verb} ${article} ${adjective} ${directObject} remarkably well. `
+      `With great enthusiasm, ${subject} ${verb} ${article} ${adjective} ${directObject} remarkably well. `,
     ];
 
     // Add a new sentence if adding it won't exceed the target length
@@ -126,7 +106,7 @@ function updateOutputContainer() {
   else if (largeCheckbox.checked) selectedLength = "large";
 
   // Fetch the words data
-  fetch("json/words.json")
+  fetch("./json/words.json") // Use relative path with ./
     .then((response) => response.json())
     .then((wordsData) => {
       // Generate a random sentence with selected length
@@ -146,7 +126,7 @@ function updateOutputContainer() {
       console.error("Error fetching words data:", error);
       const outputContainer = document.getElementById("output-container");
       outputContainer.querySelector(".card-text").textContent =
-        "Error generating sentence";
+        "Error generating sentence. Check console for details.";
     });
 }
 
@@ -178,31 +158,3 @@ document.addEventListener("DOMContentLoaded", () => {
   // Generate initial sentence on page load
   updateOutputContainer();
 });
-
-
-//---------------------------------------------------------//
-
-function toggleExpand(element) {
-  let grid = document.getElementById("grid");
-  let isExpanded = element.classList.contains("expanded");
-
-  // Remove expanded class from all items
-  document.querySelectorAll(".grid-item").forEach((item) => {
-    item.classList.remove("expanded");
-  });
-
-  if (!isExpanded) {
-    element.classList.add("expanded");
-    grid.classList.add("dimmed"); // Apply dimming
-  } else {
-    grid.classList.remove("dimmed"); // Remove dimming when collapsed
-  }
-}
-
-//Dictionary functions//
-
-async function showWord() {
-
-  fetch
-  
-}
