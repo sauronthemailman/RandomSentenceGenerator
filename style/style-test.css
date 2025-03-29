@@ -1,0 +1,315 @@
+.navbar-brand {
+  color: #8c52ff;
+}
+
+.nav-link {
+  color: #d4af37;
+}
+
+.lowest-index-bg {
+  background-color: #1c1c1c;
+  z-index: -1;
+}
+
+#navbar {
+  background-color: #1c1c1c;
+}
+
+#navbar-toggler {
+  color: #d4af37;
+  background-color: #8c52ff;
+}
+#output-container {
+  width: 70%; /* Adjust width inside the container */
+  height: 80vh;
+  display: flex;
+  justify-content: center; /* Centers content horizontally */
+  align-items: center; /* Centers content vertically */
+  padding: 10vw;
+  margin: auto;
+  margin-top: 2vh;
+}
+
+#output-container.shrink {
+  width: 40%;
+  width: 40%;
+}
+.output-box {
+  background-color: #333333; /* Dark background for contrast */
+  color: white; /* Light blue text */
+  width: 90%; /* Fill the entire container width */
+  height: 90%; /* Fill the entire container height */
+  padding: 20px; /* Internal spacing */
+  border-radius: 20px; /* Rounded corners */
+  overflow-y: auto; /* Enables vertical scrolling if content overflows */
+  font-size: 20px; /* Adjust text size */
+  text-align: left; /* Align text to the left */
+  display: flex;
+  flex-direction: column;
+  border: 2px solid black; /* Ensures the border fully covers the box */
+  box-sizing: border-box; /* Ensures padding doesn't shrink the border */
+}
+
+.btn:hover {
+  transform: scale(1.15);
+  transition: 0.3s ease-in-out;
+}
+
+#generate-filter {
+  position: fixed;
+  top: 50px;
+  right: 0; /* Positions it on the right */
+  width: auto;
+  background-color: transparent; /* Removes unwanted purple box */
+}
+
+/* Fix filter button position */
+#filter-toggler {
+  position: fixed;
+  top: 70px;
+  right: 10px;
+  z-index: 1050;
+  position: fixed;
+  top: 70px;
+  right: 10px;
+  z-index: 1050;
+}
+
+/* Ensure filter expands only from the right */
+#filterContent {
+  position: fixed;
+  top: 0;
+  left: -30%;
+  width: 30%;
+  height: 100vh;
+  background-color: #1c1c1c;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+  z-index: 1049;
+  transition: left 0.3s ease-in-out;
+  position: fixed;
+  top: 0;
+  left: -30%;
+  width: 30%;
+  height: 100vh;
+  background-color: #1c1c1c;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+  z-index: 1049;
+  transition: left 0.3s ease-in-out;
+}
+
+/* When the collapse is shown, bring it into view */
+#filterContent.show {
+  left: 0;
+}
+
+#dictionary-search {
+  padding-top: 20vh;
+  margin-top: 30vh;
+  margin-top: 50px;
+}
+.form-control {
+  position: relative;
+  z-index: 10;
+}
+#results {
+  margin-top: 20px;
+}
+#save-btn {
+}
+
+#reset-btn {
+}
+
+#edit-btn {
+}
+#dictionary-search input {
+  position: relative;
+  z-index: 10;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  padding: 20px;
+  transition: all 0.3s ease-in-out;
+}
+.grid-item {
+  background-color: #333333;
+  height: 45vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+.grid-item-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+.grid-item-scroll {
+  overflow-y: auto;
+  max-height: calc(100% - 50px);
+  scrollbar-width: thin;
+  scrollbar-color: #888 #333;
+}
+.grid-item-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.grid-item-scroll::-webkit-scrollbar-track {
+  background: #333;
+}
+
+.grid-item-scroll::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 4px;
+}
+
+.grid-item h3 {
+  margin-bottom: 15px;
+  text-align: center;
+  color: #d4af37;
+}
+
+.grid-item p {
+  color: white;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.expanded {
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  z-index: 1000;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.expanded .grid-item-content {
+  opacity: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .grid-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .grid-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .grid-container {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  padding: 20px;
+  transition: all 0.3s ease-in-out;
+}
+/* Autocomplete container styles */
+#autocomplete-container {
+  position: absolute;
+  background-color: #333;
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #555;
+  border-top: none;
+}
+
+#autocomplete-container .autocomplete-item:hover {
+  background-color: #444 !important;
+}
+#autocomplete-container {
+        position: absolute;
+        width: 100%;
+        max-height: 200px;
+        overflow-y: auto;
+        background-color: #333;
+        border: 1px solid #555;
+        z-index: 1000;
+      }
+      .autocomplete-item {
+        padding: 5px;
+        cursor: pointer;
+        background-color: #333;
+        color: white;
+        border-bottom: 1px solid #555;
+      }
+      .autocomplete-item:hover {
+        background-color: #444;
+      }
+
+/* Ensure search input container has relative positioning */
+#dictionary-search {
+  position: relative;
+}
+
+/* Adjust grid columns based on screen width */
+/* @media (max-width: 1200px) {
+  .grid-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .grid-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .grid-container {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+.grid-item {
+  background-color: #333333;
+  height: 45vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  z-index: 1;
+}*/
+
+/* Expanded item styling */
+/*.expanded {
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  z-index: 10;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+}*/

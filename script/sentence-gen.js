@@ -1,14 +1,6 @@
 const filterContent = document.getElementById("filterContent");
 const outputContainer = document.getElementById("output-container");
 
-filterContent.addEventListener("show.bs.collapse", () => {
-  outputContainer.classList.add("shrink");
-});
-
-filterContent.addEventListener("hide.bs.collapse", () => {
-  outputContainer.classList.remove("shrink");
-});
-
 // Function to get a random item from an array
 function getRandomItem(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -140,8 +132,12 @@ function generateSentenceCombination(wordsData, targetLength) {
 
     // Add a new sentence if adding it won't exceed the target length
     const newSentence = getRandomItem(sentenceTemplates);
-    if ((currentSentence + newSentence).length <= targetLength) {
-      currentSentence += newSentence;
+    if ((currentSentence + " " + newSentence).length <= targetLength) {
+      if (currentSentence.length > 0) {
+        currentSentence += " " + newSentence;
+      } else {
+        currentSentence = newSentence;
+      }
     }
 
     iterations++;
@@ -199,35 +195,61 @@ function updateOutputContainer() {
   else if (largeCheckbox.checked) selectedLength = "large";
 
   // Fetch the words data
-  fetch("./json/words.json") // Use relative path with ./
-    .then((response) => response.json())
+  fetch("./json/words.json")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
     .then((wordsData) => {
       // Generate a random sentence with selected length
       const randomSentence = generateRandomSentence(wordsData, selectedLength);
 
       // Update the output container
       const outputContainer = document.getElementById("output-container");
-      outputContainer.querySelector(".card-text").textContent = randomSentence;
-
-      // Display sentence length for verification
-      const sentenceLength = randomSentence.length;
-      outputContainer.querySelector(
-        ".card-text"
-      ).innerHTML += `<br><small class="text-muted">(Length: ${sentenceLength} characters)</small>`;
+      const cardText = outputContainer.querySelector(".card-text");
+      if (cardText) {
+        cardText.innerHTML =
+          randomSentence +
+          `<br><small class="text-muted">(Length: ${randomSentence.length} characters)</small>`;
+      } else {
+        console.error("Card text element not found in output container");
+      }
     })
     .catch((error) => {
       console.error("Error fetching words data:", error);
       const outputContainer = document.getElementById("output-container");
-      outputContainer.querySelector(".card-text").textContent =
-        "Error generating sentence. Check console for details.";
+      const cardText = outputContainer.querySelector(".card-text");
+      if (cardText) {
+        cardText.textContent =
+          "Error generating sentence. Check console for details.";
+      }
     });
+}
+
+// Add filter toggle event listeners
+if (filterContent) {
+  filterContent.addEventListener("show.bs.collapse", () => {
+    if (outputContainer) {
+      outputContainer.classList.add("shrink");
+    }
+  });
+
+  filterContent.addEventListener("hide.bs.collapse", () => {
+    if (outputContainer) {
+      outputContainer.classList.remove("shrink");
+    }
+  });
 }
 
 // Add event listeners to buttons and checkboxes
 document.addEventListener("DOMContentLoaded", () => {
   // Generate button event listener
   const generateButton = document.getElementById("generate-btn");
-  generateButton.addEventListener("click", updateOutputContainer);
+  if (generateButton) {
+    generateButton.addEventListener("click", updateOutputContainer);
+  }
 
   // Add event listeners to length checkboxes
   const lengthCheckboxes = [
@@ -237,17 +259,123 @@ document.addEventListener("DOMContentLoaded", () => {
   ];
 
   lengthCheckboxes.forEach((checkbox) => {
-    checkbox.addEventListener("change", function () {
-      // Uncheck other checkboxes
+    if (checkbox) {
+      checkbox.addEventListener("change", function () {
+        // Uncheck other checkboxes
+        lengthCheckboxes.forEach((cb) => {
+          if (cb && cb !== this) cb.checked = false;
+        });
+
+        // Generate a new sentence when checkbox is changed
+        updateOutputContainer();
+      });
+    }
+  });
+
+  // Save button event listener
+  const saveButton = document.getElementById("save-btn");
+  if (saveButton) {
+    saveButton.addEventListener("click", function () {
+      const outputText = document.querySelector(".card-text").textContent;
+      // Here you would add code to save the sentence to your history
+      console.log("Saved sentence:", outputText);
+      alert("Sentence saved to history!");
+    });
+  }
+
+  // Reset button event listener
+  const resetButton = document.getElementById("reset-btn");
+  if (resetButton) {
+    resetButton.addEventListener("click", function () {
+      // Uncheck all checkboxes
       lengthCheckboxes.forEach((cb) => {
-        if (cb !== this) cb.checked = false;
+        if (cb) cb.checked = false;
       });
 
-      // Generate a new sentence when checkbox is changed
+      // Clear the output or generate a default sentence
       updateOutputContainer();
+      console.log("Reset filters and output");
     });
-  });
+  }
 
   // Generate initial sentence on page load
   updateOutputContainer();
 });
+
+// History grid item expand functionality
+function toggleExpand(element) {
+  // Remove expanded class from all grid items
+  const gridItems = document.querySelectorAll(".grid-item");
+  gridItems.forEach((item) => {
+    if (item !== element) {
+      item.classList.remove("expanded");
+      item.style.opacity = "1";
+      item.style.visibility = "visible";
+    }
+  });
+
+  // Toggle the expanded class on the clicked item
+  element.classList.toggle("expanded");
+
+  // If expanded, dim other items
+  if (element.classList.contains("expanded")) {
+    gridItems.forEach((item) => {
+      if (item !== element) {
+        item.style.opacity = "0.3";
+        item.style.visibility = "visible";
+      }
+    });
+  } else {
+    // If not expanded, reset all items
+    gridItems.forEach((item) => {
+      item.style.opacity = "1";
+      item.style.visibility = "visible";
+    });
+  }
+}
+
+// Close expanded items when clicking outside
+document.addEventListener("click", function (event) {
+  const grid = document.getElementById("grid");
+  if (grid && !grid.contains(event.target)) {
+    const gridItems = document.querySelectorAll(".grid-item");
+    gridItems.forEach((item) => {
+      item.classList.remove("expanded");
+      item.style.opacity = "1";
+      item.style.visibility = "visible";
+    });
+  }
+});
+
+// Prevent event propagation on grid items to avoid immediate closing
+document.querySelectorAll(".grid-item").forEach((item) => {
+  item.addEventListener("click", function (event) {
+    event.stopPropagation();
+  });
+});
+
+//history tab animations and interactions
+filterContent.addEventListener("hide.bs.collapse", () => {
+  outputContainer.classList.remove("shrink");
+});
+
+function toggleExpand(element) {
+  let grid = document.getElementById("grid");
+  let isExpanded = element.classList.contains("expanded");
+
+  // Remove expanded class from all items
+  document.querySelectorAll(".grid-item").forEach((item) => {
+    item.classList.remove("expanded");
+  });
+
+  if (!isExpanded) {
+    element.classList.add("expanded");
+    grid.classList.add("dimmed"); // Apply dimming
+  } else {
+    grid.classList.remove("dimmed"); // Remove dimming when collapsed
+  }
+}
+
+
+
+
