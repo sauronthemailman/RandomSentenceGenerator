@@ -273,13 +273,77 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Save button event listener
+  // Modify the save button event listener in sentence-gen.js
   const saveButton = document.getElementById("save-btn");
+  
   if (saveButton) {
     saveButton.addEventListener("click", function () {
-      const outputText = document.querySelector(".card-text").textContent;
-      // Here you would add code to save the sentence to your history
-      console.log("Saved sentence:", outputText);
-      alert("Sentence saved to history!");
+      const cardText = document.querySelector(".card-text");
+      const outputText = cardText
+        ? cardText.textContent.split("(Length:")[0].trim()
+        : "";
+
+      if (outputText) {
+        // Get current history
+        fetch("./json/history.json")
+          .then((response) => response.json())
+          .then((historyData) => {
+            // Add new sentence to the beginning
+            const newHistory = [outputText, ...historyData];
+
+            // Update history.json (simulated since we can't actually write to file from frontend)
+            // In a real app, you'd need a backend endpoint to handle this
+            console.log("New history data:", newHistory);
+
+            // For demo purposes, we'll store in localStorage
+            localStorage.setItem("sentenceHistory", JSON.stringify(newHistory));
+            alert("Sentence saved to history!");
+
+            // If on history page, update the display
+            if (window.location.pathname.includes("history.html")) {
+              updateHistoryGrid(newHistory);
+            }
+          })
+          .catch((error) => {
+            console.error("Error saving to history:", error);
+            // Fallback to localStorage if history.json doesn't exist
+            const currentHistory = JSON.parse(
+              localStorage.getItem("sentenceHistory") || "[]"
+            );
+            const newHistory = [outputText, ...currentHistory];
+            localStorage.setItem("sentenceHistory", JSON.stringify(newHistory));
+            alert("Sentence saved to history!");
+          });
+      }
+    });
+  }
+
+  // Function to update history grid (to be used in history.js)
+  function updateHistoryGrid(sentences) {
+    const grid = document.getElementById("grid");
+    if (!grid) return;
+
+    // Clear existing grid items
+    grid.innerHTML = "";
+
+    // Create new grid items for each sentence
+    sentences.slice(0, 8).forEach((sentence, index) => {
+      const gridItem = document.createElement("div");
+      gridItem.className = "grid-item";
+      gridItem.onclick = function () {
+        toggleExpand(this);
+      };
+
+      gridItem.innerHTML = `
+      <div class="grid-item-content">
+        <h3>Saved Sentence ${index + 1}</h3>
+        <div class="grid-item-scroll">
+          <p>${sentence}</p>
+        </div>
+      </div>
+    `;
+
+      grid.appendChild(gridItem);
     });
   }
 
@@ -300,6 +364,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Generate initial sentence on page load
   updateOutputContainer();
+  
 });
 
 // History grid item expand functionality

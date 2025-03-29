@@ -87,7 +87,7 @@
       }
 
       dictionaryElements.autocompleteContainer.innerHTML = matches
-        .slice(0, 10)
+        .slice(0,)
         .map((word) => `<div class="autocomplete-item">${word}</div>`)
         .join("");
 
