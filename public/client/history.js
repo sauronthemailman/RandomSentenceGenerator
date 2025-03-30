@@ -33,9 +33,9 @@ document.addEventListener("DOMContentLoaded", () => {
             <p>${sentence.text || sentence}</p>
             ${
               sentence.timestamp
-                ? `<small class="text-muted timestamp">${formatTimestamp(
+                ? `<small class="text-muted timestamp">${new Date(
                     sentence.timestamp
-                  )}</small>`
+                  ).toLocaleString()}</small>`
                 : ""
             }
           </div>
@@ -44,12 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
     `
       )
       .join("");
-  }
-
-  // Format timestamp for display
-  function formatTimestamp(timestamp) {
-    const date = new Date(timestamp);
-    return date.toLocaleString();
   }
 
   // Initialize
@@ -62,26 +56,10 @@ function toggleExpand(element) {
   gridItems.forEach((item) => {
     if (item !== element) {
       item.classList.remove("expanded");
-      item.style.opacity = "1";
-      item.style.visibility = "visible";
     }
   });
 
   element.classList.toggle("expanded");
-
-  if (element.classList.contains("expanded")) {
-    gridItems.forEach((item) => {
-      if (item !== element) {
-        item.style.opacity = "0.3";
-        item.style.visibility = "visible";
-      }
-    });
-  } else {
-    gridItems.forEach((item) => {
-      item.style.opacity = "1";
-      item.style.visibility = "visible";
-    });
-  }
 }
 
 // Close expanded items when clicking outside
@@ -91,8 +69,6 @@ document.addEventListener("click", function (event) {
     const gridItems = document.querySelectorAll(".grid-item");
     gridItems.forEach((item) => {
       item.classList.remove("expanded");
-      item.style.opacity = "1";
-      item.style.visibility = "visible";
     });
   }
 });
