@@ -24,12 +24,12 @@ async function initializeFiles() {
   try {
     await fs.mkdir(jsonDir, { recursive: true });
 
-    const wordsPath = path.join(jsonDir, "words.json");
     const historyPath = path.join(jsonDir, "history.json");
 
-    // Initialize history.json if missing
+    // Initialize history.json if missing or invalid
     try {
-      await fs.access(historyPath);
+      const data = await fs.readFile(historyPath, "utf8");
+      JSON.parse(data); // Just validate it's valid JSON
     } catch {
       await fs.writeFile(historyPath, JSON.stringify([], null, 2));
     }
@@ -61,8 +61,15 @@ app.get("/api/history", async (req, res) => {
 
 app.post("/api/history", async (req, res) => {
   try {
-    const { sentence } = req.body;
+    let { sentence } = req.body;
     if (!sentence) return res.status(400).json({ error: "Sentence required" });
+
+    // Normalize line breaks and ensure period at end
+    sentence = sentence.trim();
+    if (!sentence.endsWith(".")) {
+      sentence += ".";
+    }
+    sentence = sentence.replace(/\.\s*/g, ".\n"); // Add line break after each period
 
     const filePath = path.join(jsonDir, "history.json");
     let history = [];
@@ -74,10 +81,17 @@ app.post("/api/history", async (req, res) => {
       console.log("Initializing new history file");
     }
 
-    history.unshift(sentence);
-    history = history.slice(0, 8);
+    // Add new entry
+    history.unshift({
+      id: Date.now(),
+      sentence: sentence,
+      timestamp: new Date().toISOString(),
+    });
 
-    await fs.writeFile(filePath, JSON.stringify(history, null, 2));
+    // Limit to 8 items and write with pretty formatting
+    history = history.slice(0, 8);
+    await fs.writeFile(filePath, JSON.stringify(history, null, 2) + "\n"); // Add final newline
+
     res.json({ success: true });
   } catch (err) {
     console.error("Error saving history:", err);

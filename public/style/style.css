@@ -274,6 +274,20 @@
       .autocomplete-item:hover {
         background-color: #f8f9fa;
       }
+    
+
+.timestamp {
+  display: block;
+  margin-top: 8px;
+  color: #6c757d;
+  font-size: 0.8rem;
+}
+
+.grid-item-scroll {
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 10px;
+}
 /* Adjust grid columns based on screen width */
 /* @media (max-width: 1200px) {
   .grid-container {

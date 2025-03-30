@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error loading history:", error);
       // Fallback to localStorage
       const historyData = JSON.parse(
-        localStorage.getItem("sentenceHistory") || []
+        localStorage.getItem("sentenceHistory") || "[]"
       );
       updateHistoryGrid(historyData);
     }
@@ -30,13 +30,26 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="grid-item-content">
           <h3>Saved Sentence ${index + 1}</h3>
           <div class="grid-item-scroll">
-            <p>${sentence}</p>
+            <p>${sentence.text || sentence}</p>
+            ${
+              sentence.timestamp
+                ? `<small class="text-muted timestamp">${formatTimestamp(
+                    sentence.timestamp
+                  )}</small>`
+                : ""
+            }
           </div>
         </div>
       </div>
     `
       )
       .join("");
+  }
+
+  // Format timestamp for display
+  function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    return date.toLocaleString();
   }
 
   // Initialize
