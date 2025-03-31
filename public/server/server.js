@@ -3,18 +3,13 @@ const fs = require("fs").promises;
 const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-// Path configuration - adjusted for your structure
-const projectRoot = path.join(__dirname, ".."); // Goes up to 'public' folder
-const publicDir = projectRoot; // Your static files are in 'public'
-const jsonDir = path.join(projectRoot, "json"); // Your JSON files are in 'public/json'
-
-// Middleware
+const projectRoot = path.join(__dirname, ".."); 
+const publicDir = projectRoot; 
+const jsonDir = path.join(projectRoot, "json"); 
 app.use(express.json());
 app.use(express.static(publicDir));
 
-// API Endpoints
-
+//Endpoints
 // Get all words
 app.get("/api/words", async (req, res) => {
   try {
@@ -32,7 +27,7 @@ app.get("/api/history", async (req, res) => {
     const data = await fs.readFile(path.join(jsonDir, "History.json"), "utf8");
     let history = JSON.parse(data);
 
-    // Convert old string format to object format if needed
+    // Convert old string format to object format
     history = history.map((item) => {
       if (typeof item === "string") {
         return {
@@ -57,7 +52,6 @@ app.post("/api/history", async (req, res) => {
     let { sentence } = req.body;
     if (!sentence) return res.status(400).json({ error: "Sentence required" });
 
-    // Format sentence
     sentence = sentence.trim();
     if (!sentence.endsWith(".")) sentence += ".";
     sentence = sentence.replace(/\.\s*/g, ".\n");
@@ -80,7 +74,7 @@ app.post("/api/history", async (req, res) => {
       timestamp: new Date().toISOString(),
     });
 
-    // Limit to 8 items
+    // Limit to 8 items(might change my mind on this later)
     history = history.slice(0, 8);
     await fs.writeFile(filePath, JSON.stringify(history, null, 2));
 
@@ -157,7 +151,7 @@ app.delete("/api/words", async (req, res) => {
   }
 });
 
-// Serve index.html for all other routes
+// Serve index.html for all other routes ***
 app.get("*", (req, res) => {
   const indexPath = path.resolve(publicDir, "index.html");
   fs.access(indexPath)
@@ -168,7 +162,7 @@ app.get("*", (req, res) => {
     });
 });
 
-// Export the app for testing
+// Export for testing ***
 module.exports = app;
 
 // Only start server if not in test environment

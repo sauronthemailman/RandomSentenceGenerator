@@ -1,4 +1,3 @@
-// Tab Switching Logic
 document.addEventListener("DOMContentLoaded", function () {
   // Define these as global variables
   window.tabs = {

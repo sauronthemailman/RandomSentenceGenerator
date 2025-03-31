@@ -1,4 +1,3 @@
-// Generator View Logic
 document.addEventListener("DOMContentLoaded", () => {
   const filterContent = document.getElementById("filterContent");
   const outputContainer = document.getElementById("output-container");
@@ -11,12 +10,12 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("large-sentence"),
   ];
 
-  // Function to get a random item from an array
+  // Get a random item from an array
   function getRandomItem(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
   }
 
-  // Function to generate multiple sentences and combine them
+  // Generate multiple sentences and combine them
   async function generateSentenceCombination(wordsData, targetLength) {
     let currentSentence = "";
     const maxIterations = 50;

@@ -2,14 +2,12 @@
 const request = require("supertest");
 const fs = require("fs").promises;
 const path = require("path");
-const app = require("./server"); // Now correctly points to server.js in same directory
+const app = require("./server"); 
+const jsonDir = path.join(__dirname, "..", "json");
+const wordsPath = path.join(jsonDir, "word.json"); 
+const historyPath = path.join(jsonDir, "History.json"); 
 
-// Update paths to match your structure
-const jsonDir = path.join(__dirname, "..", "json"); // public/json/
-const wordsPath = path.join(jsonDir, "word.json"); // Note your file is word.json not words.json
-const historyPath = path.join(jsonDir, "History.json"); // Note capitalization
-
-// Helper function to reset test files
+//Function to reset test files
 async function resetTestFiles() {
   const initialWords = {
     group1: {
@@ -106,7 +104,7 @@ describe("Random Sentence Generator API Tests", () => {
 
       expect(response.body.success).toBe(true);
 
-      // Verify the sentence was added
+      // Verify sentence was added
       const historyData = await fs.readFile(historyPath, "utf8");
       const history = JSON.parse(historyData);
       expect(history[0].sentence).toContain(newSentence);
@@ -122,8 +120,8 @@ describe("Random Sentence Generator API Tests", () => {
     });
 
     test("should limit history to 8 items", async () => {
-      // Fill history with 10 items
-      const longHistory = Array(10)
+      // Fill history with 9 items
+      const longHistory = Array(9)
         .fill()
         .map((_, i) => ({
           id: i,
@@ -158,7 +156,7 @@ describe("Random Sentence Generator API Tests", () => {
 
       expect(response.body.success).toBe(true);
 
-      // Verify the word was added
+      // Verify word added
       const wordsData = await fs.readFile(wordsPath, "utf8");
       const words = JSON.parse(wordsData);
       expect(words.group1.nouns).toContain("bird");
@@ -194,7 +192,7 @@ describe("Random Sentence Generator API Tests", () => {
 
       expect(response.body.success).toBe(true);
 
-      // Verify the word was deleted
+      // Verify word deleted
       const wordsData = await fs.readFile(wordsPath, "utf8");
       const words = JSON.parse(wordsData);
       expect(words.group1.nouns).not.toContain("cat");
@@ -212,7 +210,7 @@ describe("Random Sentence Generator API Tests", () => {
     });
   });
 
-  // Test fallback route
+  // Test fallback 
   describe("GET * (fallback)", () => {
     test("should serve index.html for unknown routes", async () => {
       await request(app)
@@ -222,7 +220,6 @@ describe("Random Sentence Generator API Tests", () => {
     });
 
     test("should return 404 if index.html is missing", async () => {
-      // Temporarily rename index.html to test this case
       const indexPath = path.join(__dirname, "..", "..", "index.html");
       try {
         await fs.rename(indexPath, indexPath + ".bak");
