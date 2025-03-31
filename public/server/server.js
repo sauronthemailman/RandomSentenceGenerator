@@ -3,29 +3,42 @@ const fs = require("fs").promises;
 const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
-const projectRoot = path.join(__dirname, ".."); 
-const publicDir = projectRoot; 
-const jsonDir = path.join(projectRoot, "json"); 
+
+const projectRoot = path.join(
+  __dirname,
+  process.env.NODE_ENV === "test" ? "../.." : ".."
+);
+const publicDir = projectRoot;
+const jsonDir = path.join(publicDir, "json");
+
+// Middleware
 app.use(express.json());
 app.use(express.static(publicDir));
 
-//Endpoints
+// API Endpoints
+
 // Get all words
 app.get("/api/words", async (req, res) => {
   try {
-    const data = await fs.readFile(path.join(jsonDir, "word.json"), "utf8");
-    res.json(JSON.parse(data));
+    const data = await fs.readFile(path.join(jsonDir, "words.json"), "utf8");
+    const parsedData = data ? JSON.parse(data) : {};
+    res.json(parsedData);
   } catch (err) {
-    console.error("Error loading words:", err);
-    res.status(500).json({ error: "Failed to load words data" });
+    if (err.code === "ENOENT") {
+      // File doesn't exist, return empty object
+      res.json({});
+    } else {
+      console.error("Error loading words:", err);
+      res.status(500).json({ error: "Failed to load words data" });
+    }
   }
 });
 
 // Get history
 app.get("/api/history", async (req, res) => {
   try {
-    const data = await fs.readFile(path.join(jsonDir, "History.json"), "utf8");
-    let history = JSON.parse(data);
+    const data = await fs.readFile(path.join(jsonDir, "history.json"), "utf8");
+    let history = data ? JSON.parse(data) : [];
 
     // Convert old string format to object format
     history = history.map((item) => {
@@ -41,8 +54,13 @@ app.get("/api/history", async (req, res) => {
 
     res.json(history);
   } catch (err) {
-    console.error("Error loading history:", err);
-    res.status(500).json({ error: "Failed to load history data" });
+    if (err.code === "ENOENT") {
+      // File doesn't exist, return empty array
+      res.json([]);
+    } else {
+      console.error("Error loading history:", err);
+      res.status(500).json({ error: "Failed to load history data" });
+    }
   }
 });
 
@@ -52,19 +70,22 @@ app.post("/api/history", async (req, res) => {
     let { sentence } = req.body;
     if (!sentence) return res.status(400).json({ error: "Sentence required" });
 
+    // Format sentence
     sentence = sentence.trim();
     if (!sentence.endsWith(".")) sentence += ".";
     sentence = sentence.replace(/\.\s*/g, ".\n");
 
-    const filePath = path.join(jsonDir, "History.json");
+    const filePath = path.join(jsonDir, "history.json");
     let history = [];
 
     try {
       const data = await fs.readFile(filePath, "utf8");
-      history = JSON.parse(data);
+      history = data ? JSON.parse(data) : [];
     } catch (err) {
-      console.error("Error reading history file:", err);
-      return res.status(500).json({ error: "Failed to load history" });
+      if (err.code !== "ENOENT") {
+        console.error("Error reading history file:", err);
+        return res.status(500).json({ error: "Failed to load history" });
+      }
     }
 
     // Add new entry
@@ -74,7 +95,7 @@ app.post("/api/history", async (req, res) => {
       timestamp: new Date().toISOString(),
     });
 
-    // Limit to 8 items(might change my mind on this later)
+    // Limit to 8 items
     history = history.slice(0, 8);
     await fs.writeFile(filePath, JSON.stringify(history, null, 2));
 
@@ -93,9 +114,17 @@ app.post("/api/words", async (req, res) => {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    const filePath = path.join(jsonDir, "word.json");
-    const data = await fs.readFile(filePath, "utf8");
-    const words = JSON.parse(data);
+    const filePath = path.join(jsonDir, "words.json");
+    let words = {};
+
+    try {
+      const data = await fs.readFile(filePath, "utf8");
+      words = data ? JSON.parse(data) : {};
+    } catch (err) {
+      if (err.code !== "ENOENT") {
+        throw err;
+      }
+    }
 
     // Initialize if not exists
     if (!words[group]) words[group] = {};
@@ -123,9 +152,18 @@ app.delete("/api/words", async (req, res) => {
     const { word } = req.body;
     if (!word) return res.status(400).json({ error: "Word is required" });
 
-    const filePath = path.join(jsonDir, "word.json");
-    const data = await fs.readFile(filePath, "utf8");
-    const words = JSON.parse(data);
+    const filePath = path.join(jsonDir, "words.json");
+    let words = {};
+
+    try {
+      const data = await fs.readFile(filePath, "utf8");
+      words = data ? JSON.parse(data) : {};
+    } catch (err) {
+      if (err.code !== "ENOENT") {
+        throw err;
+      }
+    }
+
     let deleted = false;
 
     // Search through all categories
@@ -151,7 +189,7 @@ app.delete("/api/words", async (req, res) => {
   }
 });
 
-// Serve index.html for all other routes ***
+// Serve index.html for all other routes
 app.get("*", (req, res) => {
   const indexPath = path.resolve(publicDir, "index.html");
   fs.access(indexPath)
@@ -162,7 +200,7 @@ app.get("*", (req, res) => {
     });
 });
 
-// Export for testing ***
+// Export for testing
 module.exports = app;
 
 // Only start server if not in test environment

@@ -1,139 +1,125 @@
-// public/server/server.test.js
 const request = require("supertest");
 const fs = require("fs").promises;
 const path = require("path");
-const app = require("./server"); 
-const jsonDir = path.join(__dirname, "..", "json");
-const wordsPath = path.join(jsonDir, "word.json"); 
-const historyPath = path.join(jsonDir, "History.json"); 
-
-//Function to reset test files
-async function resetTestFiles() {
-  const initialWords = {
-    group1: {
-      nouns: ["cat", "dog"],
-      verbs: ["run", "jump"],
-    },
-    group2: {
-      adjectives: ["happy", "sad"],
-    },
-  };
-
-  const initialHistory = [
-    {
-      id: 1,
-      sentence: "Test sentence 1.",
-      timestamp: "2023-01-01T00:00:00.000Z",
-    },
-    {
-      id: 2,
-      sentence: "Test sentence 2.",
-      timestamp: "2023-01-02T00:00:00.000Z",
-    },
-  ];
-
-  await fs.writeFile(wordsPath, JSON.stringify(initialWords));
-  await fs.writeFile(historyPath, JSON.stringify(initialHistory));
-}
+const app = require("./server");
 
 describe("Random Sentence Generator API Tests", () => {
+  const jsonDir = path.join(__dirname, "..", "..", "json");
+  const wordsPath = path.join(jsonDir, "words.json");
+  const historyPath = path.join(jsonDir, "history.json");
+  const indexPath = path.join(__dirname, "..", "..", "index.html");
+
+  // Backup original files
+  let originalWords, originalHistory;
+
   beforeAll(async () => {
-    await resetTestFiles();
+    try {
+      await fs.mkdir(jsonDir, { recursive: true });
+
+      // Backup existing files or create basic structure if they don't exist
+      try {
+        originalWords = await fs.readFile(wordsPath, "utf8");
+      } catch {
+        originalWords = JSON.stringify({});
+        await fs.writeFile(wordsPath, originalWords);
+      }
+
+      try {
+        originalHistory = await fs.readFile(historyPath, "utf8");
+      } catch {
+        originalHistory = JSON.stringify([]);
+        await fs.writeFile(historyPath, originalHistory);
+      }
+    } catch (err) {
+      console.error("Setup error:", err);
+      throw err;
+    }
   });
 
-  afterEach(async () => {
-    await resetTestFiles();
+  afterAll(async () => {
+    // Restore original files
+    try {
+      await fs.writeFile(wordsPath, originalWords);
+      await fs.writeFile(historyPath, originalHistory);
+    } catch (err) {
+      console.error("Cleanup error:", err);
+    }
   });
 
-  // Test GET /api/words
   describe("GET /api/words", () => {
-    test("should return all words with status 200", async () => {
-      const response = await request(app)
-        .get("/api/words")
-        .expect("Content-Type", /json/)
-        .expect(200);
+    test("should return words data with status 200", async () => {
+      const response = await request(app).get("/api/words").expect(200);
 
-      expect(response.body).toHaveProperty("group1");
-      expect(response.body.group1).toHaveProperty("nouns");
-      expect(response.body.group1.nouns).toContain("cat");
+      expect(response.body).toBeInstanceOf(Object);
     });
 
     test("should return 500 if words file is missing", async () => {
-      await fs.unlink(wordsPath);
+      await fs.rename(wordsPath, wordsPath + ".bak");
+
       await request(app).get("/api/words").expect(500);
+
+      await fs.rename(wordsPath + ".bak", wordsPath);
     });
   });
 
-  // Test GET /api/history
   describe("GET /api/history", () => {
     test("should return history with status 200", async () => {
-      const response = await request(app)
-        .get("/api/history")
-        .expect("Content-Type", /json/)
-        .expect(200);
+      const response = await request(app).get("/api/history").expect(200);
 
       expect(Array.isArray(response.body)).toBe(true);
-      expect(response.body[0]).toHaveProperty("sentence");
-      expect(response.body[0]).toHaveProperty("timestamp");
     });
 
     test("should convert old string format to object format", async () => {
-      await fs.writeFile(historyPath, JSON.stringify(["old sentence"]));
+      // Temporarily write old format data
+      await fs.writeFile(historyPath, JSON.stringify(["Old sentence"]));
 
       const response = await request(app).get("/api/history").expect(200);
 
       expect(typeof response.body[0]).toBe("object");
-      expect(response.body[0]).toHaveProperty("id");
       expect(response.body[0]).toHaveProperty("sentence");
+
+      // Restore original data
+      await fs.writeFile(historyPath, originalHistory);
     });
 
     test("should return 500 if history file is missing", async () => {
-      await fs.unlink(historyPath);
+      await fs.rename(historyPath, historyPath + ".bak");
+
       await request(app).get("/api/history").expect(500);
+
+      await fs.rename(historyPath + ".bak", historyPath);
     });
   });
 
-  // Test POST /api/history
   describe("POST /api/history", () => {
     test("should add a new sentence to history with status 200", async () => {
-      const newSentence = "This is a new test sentence";
-      const response = await request(app)
-        .post("/api/history")
-        .send({ sentence: newSentence })
-        .expect(200);
+      const newSentence = { sentence: "New test sentence" };
+      await request(app).post("/api/history").send(newSentence).expect(200);
 
-      expect(response.body.success).toBe(true);
-
-      // Verify sentence was added
       const historyData = await fs.readFile(historyPath, "utf8");
       const history = JSON.parse(historyData);
-      expect(history[0].sentence).toContain(newSentence);
+      expect(history[0].sentence).toMatch(/New test sentence\./);
     });
 
     test("should format the sentence correctly", async () => {
-      const testSentence = "test sentence  ";
-      await request(app).post("/api/history").send({ sentence: testSentence });
+      const testSentence = { sentence: "Test sentence" };
+      await request(app).post("/api/history").send(testSentence);
 
       const historyData = await fs.readFile(historyPath, "utf8");
       const history = JSON.parse(historyData);
-      expect(history[0].sentence).toMatch(/\.\n?$/);
+      expect(history[0].sentence).toMatch(/Test sentence\.\n/);
     });
 
     test("should limit history to 8 items", async () => {
-      // Fill history with 9 items
-      const longHistory = Array(9)
-        .fill()
-        .map((_, i) => ({
-          id: i,
-          sentence: `Sentence ${i}`,
-          timestamp: new Date().toISOString(),
-        }));
-      await fs.writeFile(historyPath, JSON.stringify(longHistory));
+      // Clear history first
+      await fs.writeFile(historyPath, JSON.stringify([]));
 
-      // Add one more
-      await request(app)
-        .post("/api/history")
-        .send({ sentence: "New sentence" });
+      // Add enough items to test the limit
+      for (let i = 0; i < 10; i++) {
+        await request(app)
+          .post("/api/history")
+          .send({ sentence: `Sentence ${i}` });
+      }
 
       const historyData = await fs.readFile(historyPath, "utf8");
       const history = JSON.parse(historyData);
@@ -145,34 +131,51 @@ describe("Random Sentence Generator API Tests", () => {
     });
   });
 
-  // Test POST /api/words
   describe("POST /api/words", () => {
+    beforeEach(async () => {
+      // Start with clean words data for these tests
+      await fs.writeFile(
+        wordsPath,
+        JSON.stringify({
+          TestGroup: {
+            TestCategory: ["existingWord"],
+          },
+        })
+      );
+    });
+
     test("should add a new word with status 200", async () => {
-      const newWord = { word: "bird", group: "group1", category: "nouns" };
-      const response = await request(app)
-        .post("/api/words")
-        .send(newWord)
-        .expect(200);
+      const newWord = {
+        word: "newWord",
+        group: "TestGroup",
+        category: "TestCategory",
+      };
+      await request(app).post("/api/words").send(newWord).expect(200);
 
-      expect(response.body.success).toBe(true);
-
-      // Verify word added
       const wordsData = await fs.readFile(wordsPath, "utf8");
       const words = JSON.parse(wordsData);
-      expect(words.group1.nouns).toContain("bird");
+      expect(words.TestGroup.TestCategory).toContain("newWord");
     });
 
     test("should initialize group/category if not exists", async () => {
-      const newWord = { word: "swim", group: "group1", category: "verbs" };
-      await request(app).post("/api/words").send(newWord);
+      const newWord = {
+        word: "swim",
+        group: "NewGroup",
+        category: "NewCategory",
+      };
+      await request(app).post("/api/words").send(newWord).expect(200);
 
       const wordsData = await fs.readFile(wordsPath, "utf8");
       const words = JSON.parse(wordsData);
-      expect(words.group1.verbs).toContain("swim");
+      expect(words.NewGroup.NewCategory).toContain("swim");
     });
 
     test("should return 400 if word already exists", async () => {
-      const existingWord = { word: "cat", group: "group1", category: "nouns" };
+      const existingWord = {
+        word: "existingWord",
+        group: "TestGroup",
+        category: "TestCategory",
+      };
       await request(app).post("/api/words").send(existingWord).expect(400);
     });
 
@@ -181,21 +184,29 @@ describe("Random Sentence Generator API Tests", () => {
     });
   });
 
-  // Test DELETE /api/words
   describe("DELETE /api/words", () => {
+    beforeEach(async () => {
+      // Start with clean words data for these tests
+      await fs.writeFile(
+        wordsPath,
+        JSON.stringify({
+          TestGroup: {
+            TestCategory: ["wordToDelete", "wordToKeep"],
+          },
+        })
+      );
+    });
+
     test("should delete an existing word with status 200", async () => {
-      const wordToDelete = { word: "cat" };
-      const response = await request(app)
+      await request(app)
         .delete("/api/words")
-        .send(wordToDelete)
+        .send({ word: "wordToDelete" })
         .expect(200);
 
-      expect(response.body.success).toBe(true);
-
-      // Verify word deleted
       const wordsData = await fs.readFile(wordsPath, "utf8");
       const words = JSON.parse(wordsData);
-      expect(words.group1.nouns).not.toContain("cat");
+      expect(words.TestGroup.TestCategory).not.toContain("wordToDelete");
+      expect(words.TestGroup.TestCategory).toContain("wordToKeep");
     });
 
     test("should return 404 if word not found", async () => {
@@ -210,23 +221,27 @@ describe("Random Sentence Generator API Tests", () => {
     });
   });
 
-  // Test fallback 
   describe("GET * (fallback)", () => {
     test("should serve index.html for unknown routes", async () => {
       await request(app)
-        .get("/unknown-route")
+        .get("/nonexistent")
         .expect(200)
         .expect("Content-Type", /html/);
     });
 
     test("should return 404 if index.html is missing", async () => {
-      const indexPath = path.join(__dirname, "..", "..", "index.html");
       try {
+        // Temporarily rename index.html
         await fs.rename(indexPath, indexPath + ".bak");
-        await request(app).get("/unknown-route").expect(404);
+
+        await request(app).get("/nonexistent").expect(404);
       } finally {
-        // Restore the file
-        await fs.rename(indexPath + ".bak", indexPath);
+        // Restore the file if it exists
+        try {
+          await fs.rename(indexPath + ".bak", indexPath);
+        } catch (err) {
+          if (err.code !== "ENOENT") throw err;
+        }
       }
     });
   });

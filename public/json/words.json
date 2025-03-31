@@ -98,8 +98,7 @@
       "criminal",
       "prisoner",
       "guard",
-      "hunter",
-      "waiter"
+      "hunter"
     ],
     "Pronouns": [
       "he",
@@ -466,6 +465,32 @@
       "weak",
       "clean",
       "dirty"
+    ]
+  },
+  "group1": {
+    "nouns": [
+      "bird"
+    ],
+    "verbs": [
+      "swim"
+    ]
+  },
+  "TestGroup": {
+    "TestCategory": [
+      "newWord",
+      "existingWord"
+    ]
+  },
+  "NewGroup": {
+    "NewCategory": [
+      "swim",
+      "newWord"
+    ]
+  },
+  "ExistingGroup": {
+    "ExistingCategory": [
+      "newWord",
+      "existingWord"
     ]
   }
 }
