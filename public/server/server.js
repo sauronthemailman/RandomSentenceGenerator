@@ -4,10 +4,10 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Path configuration
-const projectRoot = path.join(__dirname, "..");
-const publicDir = projectRoot;
-const jsonDir = path.join(publicDir, "json");
+// Path configuration - adjusted for your structure
+const projectRoot = path.join(__dirname, ".."); // Goes up to 'public' folder
+const publicDir = projectRoot; // Your static files are in 'public'
+const jsonDir = path.join(projectRoot, "json"); // Your JSON files are in 'public/json'
 
 // Middleware
 app.use(express.json());
@@ -18,7 +18,7 @@ app.use(express.static(publicDir));
 // Get all words
 app.get("/api/words", async (req, res) => {
   try {
-    const data = await fs.readFile(path.join(jsonDir, "words.json"), "utf8");
+    const data = await fs.readFile(path.join(jsonDir, "word.json"), "utf8");
     res.json(JSON.parse(data));
   } catch (err) {
     console.error("Error loading words:", err);
@@ -29,7 +29,7 @@ app.get("/api/words", async (req, res) => {
 // Get history
 app.get("/api/history", async (req, res) => {
   try {
-    const data = await fs.readFile(path.join(jsonDir, "history.json"), "utf8");
+    const data = await fs.readFile(path.join(jsonDir, "History.json"), "utf8");
     let history = JSON.parse(data);
 
     // Convert old string format to object format if needed
@@ -62,7 +62,7 @@ app.post("/api/history", async (req, res) => {
     if (!sentence.endsWith(".")) sentence += ".";
     sentence = sentence.replace(/\.\s*/g, ".\n");
 
-    const filePath = path.join(jsonDir, "history.json");
+    const filePath = path.join(jsonDir, "History.json");
     let history = [];
 
     try {
@@ -99,7 +99,7 @@ app.post("/api/words", async (req, res) => {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    const filePath = path.join(jsonDir, "words.json");
+    const filePath = path.join(jsonDir, "word.json");
     const data = await fs.readFile(filePath, "utf8");
     const words = JSON.parse(data);
 
@@ -129,7 +129,7 @@ app.delete("/api/words", async (req, res) => {
     const { word } = req.body;
     if (!word) return res.status(400).json({ error: "Word is required" });
 
-    const filePath = path.join(jsonDir, "words.json");
+    const filePath = path.join(jsonDir, "word.json");
     const data = await fs.readFile(filePath, "utf8");
     const words = JSON.parse(data);
     let deleted = false;
@@ -168,7 +168,12 @@ app.get("*", (req, res) => {
     });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+// Export the app for testing
+module.exports = app;
+
+// Only start server if not in test environment
+if (process.env.NODE_ENV !== "test") {
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}

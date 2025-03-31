@@ -1,0 +1,39 @@
+{
+  "name": "RandomSentenceGenerator",
+  "version": "1.0.0",
+  "description": "Random Sentence Generator Application",
+  "main": "index.js",
+  "scripts": {
+    "test": "cross-env NODE_ENV=test jest public/server/server.test.js",
+    "test:watch": "cross-env NODE_ENV=test jest --watchAll public/server/server.test.js",
+    "start": "node public/server/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sauronthemailman/RandomSentenceGenerator.git"
+  },
+  "keywords": [
+    "sentence",
+    "generator",
+    "language"
+  ],
+  "author": "Your Name",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/sauronthemailman/RandomSentenceGenerator/issues"
+  },
+  "homepage": "https://github.com/sauronthemailman/RandomSentenceGenerator#readme",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
