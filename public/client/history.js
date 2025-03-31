@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
       updateHistoryGrid(historyData);
     } catch (error) {
       console.error("Error loading history:", error);
-      // Fallback to localStorage
       const historyData = JSON.parse(
         localStorage.getItem("sentenceHistory") || "[]"
       );
@@ -19,30 +18,32 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Update grid with history data
-  function updateHistoryGrid(sentences) {
+  function updateHistoryGrid(historyItems) {
     if (!grid) return;
 
-    grid.innerHTML = sentences
+    grid.innerHTML = historyItems
       .slice(0, 8)
-      .map(
-        (sentence, index) => `
-      <div class="grid-item" onclick="toggleExpand(this)">
-        <div class="grid-item-content">
-          <h3>Saved Sentence ${index + 1}</h3>
-          <div class="grid-item-scroll">
-            <p>${sentence.text || sentence}</p>
-            ${
-              sentence.timestamp
-                ? `<small class="text-muted timestamp">${new Date(
-                    sentence.timestamp
-                  ).toLocaleString()}</small>`
-                : ""
-            }
+      .map((item, index) => {
+        // Handle both object and string formats
+        const sentence = item.sentence || item.text || item;
+        const timestamp = item.timestamp ? new Date(item.timestamp) : null;
+
+        return `
+          <div class="grid-item" onclick="toggleExpand(this)">
+            <div class="grid-item-content">
+              <h3>Saved Sentence ${index + 1}</h3>
+              <div class="grid-item-scroll">
+                <p>${sentence}</p>
+                ${
+                  timestamp
+                    ? `<small class="text-muted timestamp">${timestamp.toLocaleString()}</small>`
+                    : ""
+                }
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    `
-      )
+        `;
+      })
       .join("");
   }
 
@@ -58,7 +59,6 @@ function toggleExpand(element) {
       item.classList.remove("expanded");
     }
   });
-
   element.classList.toggle("expanded");
 }
 
