@@ -1,1 +1,2 @@
-public/nodemodules
+node_modules/
+coverage/
