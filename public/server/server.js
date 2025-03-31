@@ -25,6 +25,7 @@ async function initializeFiles() {
     await fs.mkdir(jsonDir, { recursive: true });
 
     const historyPath = path.join(jsonDir, "history.json");
+    const wordsPath = path.join(jsonDir, "words.json");
 
     // Initialize history.json if missing or invalid
     try {
@@ -32,6 +33,39 @@ async function initializeFiles() {
       JSON.parse(data); // Just validate it's valid JSON
     } catch {
       await fs.writeFile(historyPath, JSON.stringify([], null, 2));
+    }
+
+    // Initialize words.json if missing or invalid
+    try {
+      const data = await fs.readFile(wordsPath, "utf8");
+      JSON.parse(data);
+    } catch {
+      const defaultWords = {
+        Subject: {
+          Nouns: ["dog", "teacher", "car"],
+          Pronouns: ["he", "she", "it"],
+        },
+        Predicate: {
+          Verbs: ["eats", "teaches", "drives"],
+          "Helping Verbs": ["is", "are", "was"],
+        },
+        Object: {
+          "Direct Objects": ["apple", "lesson", "road"],
+          "Indirect Objects": ["him", "her", "us"],
+        },
+        Complement: {
+          "Subject Complements": ["happy", "tired", "excited"],
+          "Object Complements": ["delicious", "boring", "dangerous"],
+        },
+        Modifiers: {
+          Articles: ["the", "a", "an"],
+          Demonstratives: ["this", "that", "these"],
+          Possessives: ["my", "your", "his"],
+          Quantifiers: ["some", "any", "few"],
+          Adjectives: ["big", "small", "tall"],
+        },
+      };
+      await fs.writeFile(wordsPath, JSON.stringify(defaultWords, null, 2));
     }
   } catch (err) {
     console.error("Could not initialize files:", err);
@@ -96,6 +130,74 @@ app.post("/api/history", async (req, res) => {
   } catch (err) {
     console.error("Error saving history:", err);
     res.status(500).json({ error: "Failed to save history" });
+  }
+});
+
+// Add word endpoint
+app.post("/api/words", async (req, res) => {
+  try {
+    const { word, group, category } = req.body;
+    if (!word || !group || !category) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const filePath = path.join(jsonDir, "words.json");
+    const data = await fs.readFile(filePath, "utf8");
+    const words = JSON.parse(data);
+
+    // Initialize if not exists
+    if (!words[group]) words[group] = {};
+    if (!words[group][category]) words[group][category] = [];
+
+    // Check if word already exists
+    if (words[group][category].includes(word)) {
+      return res.status(400).json({ error: "Word already exists" });
+    }
+
+    // Add the word
+    words[group][category].push(word);
+    await fs.writeFile(filePath, JSON.stringify(words, null, 2));
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Error adding word:", err);
+    res.status(500).json({ error: "Failed to add word" });
+  }
+});
+
+// Delete word endpoint
+app.delete("/api/words", async (req, res) => {
+  try {
+    const { word } = req.body;
+    if (!word) {
+      return res.status(400).json({ error: "Word is required" });
+    }
+
+    const filePath = path.join(jsonDir, "words.json");
+    const data = await fs.readFile(filePath, "utf8");
+    const words = JSON.parse(data);
+    let deleted = false;
+
+    // Search through all categories and delete the word
+    for (const group of Object.values(words)) {
+      for (const category of Object.values(group)) {
+        const index = category.indexOf(word);
+        if (index !== -1) {
+          category.splice(index, 1);
+          deleted = true;
+        }
+      }
+    }
+
+    if (deleted) {
+      await fs.writeFile(filePath, JSON.stringify(words, null, 2));
+      res.json({ success: true });
+    } else {
+      res.status(404).json({ error: "Word not found" });
+    }
+  } catch (err) {
+    console.error("Error deleting word:", err);
+    res.status(500).json({ error: "Failed to delete word" });
   }
 });
 

@@ -115,11 +115,33 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if (addWordToData(word, groupName, category)) {
-      const modal = bootstrap.Modal.getInstance(elements.addWordModal);
-      modal?.hide();
-      clearAddWordForm();
-      alert(`Successfully added "${word}" to ${category}`);
+    try {
+      const response = await fetch("/api/words", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          word: word,
+          group: groupName,
+          category: category,
+        }),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        // Update local data if server update was successful
+        addWordToData(word, groupName, category);
+        const modal = bootstrap.Modal.getInstance(elements.addWordModal);
+        modal?.hide();
+        clearAddWordForm();
+        alert(`Successfully added "${word}" to ${category}`);
+      } else {
+        alert(result.error || "Failed to add word");
+      }
+    } catch (error) {
+      console.error("Error adding word:", error);
+      alert("Failed to add word");
     }
   }
 
@@ -174,19 +196,35 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Handle delete word
-  function handleDeleteWord() {
+  async function handleDeleteWord() {
     const word = elements.searchInput?.value.trim();
     if (!word) {
       alert("Please enter a word to delete");
       return;
     }
 
-    if (deleteWordFromData(word)) {
-      elements.searchInput.value = "";
-      elements.autocompleteContainer?.classList.add("d-none");
-      alert(`Deleted "${word}"`);
-    } else {
-      alert("Word not found");
+    try {
+      const response = await fetch("/api/words", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ word }),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        // Update local data if server update was successful
+        deleteWordFromData(word);
+        elements.searchInput.value = "";
+        elements.autocompleteContainer?.classList.add("d-none");
+        alert(`Deleted "${word}"`);
+      } else {
+        alert(result.error || "Word not found");
+      }
+    } catch (error) {
+      console.error("Error deleting word:", error);
+      alert("Failed to delete word");
     }
   }
 
